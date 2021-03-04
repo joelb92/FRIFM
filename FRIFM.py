@@ -20,15 +20,17 @@ def FRIFM(im,det,standardWidth=150):
     chip = rescale(chip,scale_factor,anti_aliasing=False)
     FRIFM = sobel(chip).mean()
     return FRIFM
-    
-if __name__ == '__main__': 
-    impath = sys.argv[1]
+
+def runFRIFM(impath,standardWidth=150):
     detector = dlib.get_frontal_face_detector()
     im = (skio.imread(impath,1)*255).astype(np.uint8)
-    
     dets = detector(im)
     FRIFM_array = []
     for d in dets:
-        FRIFM_array.append(FRIFM(im,d))
+        FRIFM_array.append(FRIFM(im,d,standardWidth))
+    return FRIFM_array
+if __name__ == '__main__': 
+    impath = sys.argv[1]
+    FRIFM_array = runFRIFM(impath)
     print("Number of faces detected: ", len(FRIFM_array))
     print("FRIFM Values:",FRIFM_array)
